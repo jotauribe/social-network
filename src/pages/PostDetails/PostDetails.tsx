@@ -1,19 +1,21 @@
 import './PostDetails.css';
 
-import { ArrowLeft, MoreHorizontal, Trash2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 
 import { Avatar } from '../../components/Avatar';
-import { Card } from '../../components/Card';
-import { Menu, MenuItem } from '../../components/Menu';
 import { Post } from '../../components/Post';
 import { useCommentRepository } from '../../hooks/useCommentRepository';
 import { usePostRepository } from '../../hooks/usePostRepository';
-import { formatDate } from '../../utils/date';
+import { useUserRepository } from '../../hooks/useUserRepository';
+import { CommentItem } from './CommentItem';
 
 const PostDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const [commentText, setCommentText] = useState('');
 
+  const { user } = useUserRepository();
   const { post, isLoading: isPostLoading, error: postError } = usePostRepository(id!);
 
   const {
@@ -22,7 +24,36 @@ const PostDetails = () => {
     error: commentsError,
     deleteComment,
     isDeletingComment,
+    createComment,
+    isCreatingComment,
   } = useCommentRepository(id!);
+
+  const handleCreateComment = async (
+    e?: React.FormEvent,
+    parentId: string | null = null,
+    content: string = commentText
+  ) => {
+    e?.preventDefault();
+    if (!content.trim() || !user) return;
+
+    try {
+      await createComment({
+        name: user.username,
+        avatar: user.avatar,
+        content: content,
+        parentId: parentId,
+      });
+      if (parentId === null) {
+        setCommentText('');
+      }
+    } catch (error) {
+      console.error('Failed to create comment:', error);
+    }
+  };
+
+  const handleReplyToComment = async (parentId: string, content: string) => {
+    await handleCreateComment(undefined, parentId, content);
+  };
 
   const handleDeleteComment = async (commentId: string) => {
     if (window.confirm('Are you sure you want to delete this comment?')) {
@@ -68,42 +99,45 @@ const PostDetails = () => {
         <Post post={post} />
 
         <div className="comments-section">
+          {user && (
+            <form className="comment-form" onSubmit={(e) => handleCreateComment(e)}>
+              <Avatar src={user.avatar} alt={user.username} className="comment-avatar" />
+              <div className="comment-input-container">
+                <textarea
+                  className="comment-input"
+                  placeholder="Post your reply"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  disabled={isCreatingComment}
+                  rows={1}
+                />
+                <div className="comment-actions">
+                  <button
+                    type="submit"
+                    className="reply-button"
+                    disabled={!commentText.trim() || isCreatingComment}
+                  >
+                    Reply
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+
           {isCommentsLoading ? (
             <div className="comments-loading">Loading comments...</div>
           ) : commentsError ? (
             <div className="comments-error">Failed to load comments</div>
           ) : (
             comments?.map((comment) => (
-              <Card key={comment.id} className="comment-card">
-                <div className="comment-layout">
-                  <Avatar src={comment.avatar} alt={comment.name} className="comment-avatar" />
-                  <div className="comment-content-column">
-                    <div className="comment-header-row">
-                      <span className="comment-author-name">{comment.name}</span>
-                      <span className="comment-separator">·</span>
-                      <span className="comment-date">{formatDate(comment.createdAt)}</span>
-                      <Menu
-                        className="comment-menu"
-                        trigger={
-                          <button className="post-menu-button" aria-label="Comment options">
-                            <MoreHorizontal size={16} />
-                          </button>
-                        }
-                      >
-                        <MenuItem
-                          onClick={() => handleDeleteComment(comment.id)}
-                          disabled={isDeletingComment}
-                          variant="destructive"
-                        >
-                          <Trash2 size={16} />
-                          Delete
-                        </MenuItem>
-                      </Menu>
-                    </div>
-                    <p className="comment-text">{comment.comment}</p>
-                  </div>
-                </div>
-              </Card>
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                onReply={handleReplyToComment}
+                onDelete={handleDeleteComment}
+                isDeleting={isDeletingComment}
+                isCreating={isCreatingComment}
+              />
             ))
           )}
         </div>
