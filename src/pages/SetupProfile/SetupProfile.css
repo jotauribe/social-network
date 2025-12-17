@@ -1,0 +1,67 @@
+.profile-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  padding: 2rem;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.avatar-section {
+  text-align: left;
+}
+
+.avatar-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.875rem;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.avatar-button {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background-color: #f9fafb;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.avatar-button:hover {
+  transform: scale(1.05);
+  border-color: #d1d5db;
+}
+
+.avatar-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-button.selected {
+  border-color: var(--primary-color);
+  background-color: transparent;
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.avatar-button.selected:hover {
+  border-color: var(--primary-color);
+}
