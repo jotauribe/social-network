@@ -27,6 +27,14 @@ export const useCommentRepository = (postId: string) => {
     },
   });
 
+  const updateCommentMutation = useMutation({
+    mutationFn: ({ commentId, content }: { commentId: string; content: string }) =>
+      commentService.updateComment(postId, commentId, content),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+    },
+  });
+
   return {
     comments: commentsQuery.data,
     isLoading: commentsQuery.isLoading,
@@ -35,5 +43,7 @@ export const useCommentRepository = (postId: string) => {
     isDeletingComment: deleteCommentMutation.isPending,
     createComment: createCommentMutation.mutateAsync,
     isCreatingComment: createCommentMutation.isPending,
+    updateComment: updateCommentMutation.mutateAsync,
+    isUpdatingComment: updateCommentMutation.isPending,
   };
 };

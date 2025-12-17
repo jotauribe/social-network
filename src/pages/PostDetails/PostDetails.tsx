@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 
 import { Avatar } from '../../components/Avatar';
+import { Button } from '../../components/Button';
+import { Input } from '../../components/Input';
 import { Post } from '../../components/Post';
 import { useCommentRepository } from '../../hooks/useCommentRepository';
 import { usePostRepository } from '../../hooks/usePostRepository';
@@ -16,7 +18,13 @@ const PostDetails = () => {
   const [commentText, setCommentText] = useState('');
 
   const { user } = useUserRepository();
-  const { post, isLoading: isPostLoading, error: postError } = usePostRepository(id!);
+  const {
+    post,
+    isLoading: isPostLoading,
+    error: postError,
+    updatePost,
+    isUpdatingPost,
+  } = usePostRepository(id!);
 
   const {
     comments,
@@ -26,6 +34,8 @@ const PostDetails = () => {
     isDeletingComment,
     createComment,
     isCreatingComment,
+    updateComment,
+    isUpdatingComment,
   } = useCommentRepository(id!);
 
   const handleCreateComment = async (
@@ -65,6 +75,22 @@ const PostDetails = () => {
     }
   };
 
+  const handleEditComment = async (commentId: string, content: string) => {
+    try {
+      await updateComment({ commentId, content });
+    } catch (error) {
+      console.error('Failed to update comment:', error);
+    }
+  };
+
+  const handleEditPost = async (_id: string, content: string) => {
+    try {
+      await updatePost({ content });
+    } catch (error) {
+      console.error('Failed to update post:', error);
+    }
+  };
+
   if (isPostLoading) {
     return (
       <div className="loading-container">
@@ -96,14 +122,15 @@ const PostDetails = () => {
       </header>
 
       <div className="post-details-content">
-        <Post post={post} />
+        <Post post={post} onEdit={handleEditPost} isUpdating={isUpdatingPost} />
 
         <div className="comments-section">
           {user && (
             <form className="comment-form" onSubmit={(e) => handleCreateComment(e)}>
               <Avatar src={user.avatar} alt={user.username} className="comment-avatar" />
               <div className="comment-input-container">
-                <textarea
+                <Input
+                  multiline
                   className="comment-input"
                   placeholder="Post your reply"
                   value={commentText}
@@ -112,13 +139,13 @@ const PostDetails = () => {
                   rows={1}
                 />
                 <div className="comment-actions">
-                  <button
+                  <Button
                     type="submit"
                     className="reply-button"
                     disabled={!commentText.trim() || isCreatingComment}
                   >
                     Reply
-                  </button>
+                  </Button>
                 </div>
               </div>
             </form>
@@ -135,8 +162,10 @@ const PostDetails = () => {
                 comment={comment}
                 onReply={handleReplyToComment}
                 onDelete={handleDeleteComment}
+                onEdit={handleEditComment}
                 isDeleting={isDeletingComment}
                 isCreating={isCreatingComment}
+                isUpdating={isUpdatingComment}
               />
             ))
           )}

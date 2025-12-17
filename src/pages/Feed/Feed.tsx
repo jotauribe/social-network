@@ -17,7 +17,7 @@ const Feed = () => {
   }
 
   if (error) {
-    return <div className="error-container">Failed to load posts.</div>;
+    return <div className="error-container">No comments found.</div>;
   }
 
   return (

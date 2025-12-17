@@ -1,20 +1,43 @@
 import './Input.css';
 
 import { clsx } from 'clsx';
-import type { InputHTMLAttributes } from 'react';
+import type { ChangeEvent, ComponentProps } from 'react';
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+type BaseInputProps = {
+  label?: string;
   containerClassName?: string;
-}
+  multiline?: boolean;
+};
 
-export const Input = ({ label, id, className, containerClassName, ...props }: InputProps) => {
+export type InputProps = BaseInputProps &
+  Omit<ComponentProps<'input'>, 'onChange'> & {
+    onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    rows?: number;
+  };
+
+export const Input = (props: InputProps) => {
+  const { label, id, className, containerClassName, multiline, ...rest } = props;
+
   return (
     <div className={clsx('input-container', containerClassName)}>
-      <label htmlFor={id} className="input-label">
-        {label}
-      </label>
-      <input id={id} className={clsx('input-field', className)} {...props} />
+      {label && (
+        <label htmlFor={id} className="input-label">
+          {label}
+        </label>
+      )}
+      {multiline ? (
+        <textarea
+          id={id}
+          className={clsx('input-field', className)}
+          {...(rest as ComponentProps<'textarea'>)}
+        />
+      ) : (
+        <input
+          id={id}
+          className={clsx('input-field', className)}
+          {...(rest as ComponentProps<'input'>)}
+        />
+      )}
     </div>
   );
 };

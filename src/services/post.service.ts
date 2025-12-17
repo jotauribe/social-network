@@ -49,4 +49,18 @@ export const postService = {
       throw new Error('Failed to delete post');
     }
   },
+
+  updatePost: async (id: string, post: Partial<Post>): Promise<Post> => {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(post),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update post');
+    }
+    return response.json();
+  },
 };

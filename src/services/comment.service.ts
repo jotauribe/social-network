@@ -48,6 +48,20 @@ export const commentService = {
     }
   },
 
+  updateComment: async (postId: string, commentId: string, content: string): Promise<Comment> => {
+    const response = await fetch(`${API_BASE_URL}/${postId}/comment/${commentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update comment');
+    }
+    return response.json();
+  },
+
   createComment: async (
     postId: string,
     comment: Omit<Comment, 'id' | 'createdAt' | 'comments'>

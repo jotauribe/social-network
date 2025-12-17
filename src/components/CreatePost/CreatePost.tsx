@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { usePostListRepository } from '../../hooks/usePostListRepository';
 import { useUserRepository } from '../../hooks/useUserRepository';
+import { Button } from '../Button';
 import { Input } from '../Input';
 
 interface CreatePostProps {
@@ -52,27 +53,24 @@ export const CreatePost = ({ onSuccess }: CreatePostProps) => {
           maxLength={300}
         />
 
-        <div className="cp-input-container">
-          <label htmlFor="post-content" className="cp-input-label">
-            Content
-          </label>
-          <textarea
-            id="post-content"
-            className="cp-textarea-field"
-            placeholder="What's on your mind?"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </div>
+        <Input
+          id="post-content"
+          label="Content"
+          multiline
+          className="cp-textarea-field"
+          placeholder="What's on your mind?"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
 
         <div className="cp-footer">
-          <button
+          <Button
             className="cp-btn-primary"
             disabled={!title.trim() || isCreating}
             onClick={handleSubmit}
           >
             {isCreating ? 'Posting...' : 'Post'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
