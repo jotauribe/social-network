@@ -6,6 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import App from './App.tsx';
+import CreatePostPage from './pages/CreatePost';
 import Feed from './pages/Feed';
 import PostDetails from './pages/PostDetails';
 import SetupProfile from './pages/SetupProfile/SetupProfile.tsx';
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<App />} />
           <Route path="/profile" element={<SetupProfile />} />
           <Route path="/feed" element={<Feed />} />
+          <Route path="/create" element={<CreatePostPage />} />
           <Route path="/post/:id" element={<PostDetails />} />
         </Routes>
       </BrowserRouter>

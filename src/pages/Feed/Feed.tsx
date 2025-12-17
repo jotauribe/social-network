@@ -1,5 +1,6 @@
 import './Feed.css';
 
+import { Plus } from 'lucide-react';
 import { Link } from 'react-router';
 
 import { Avatar } from '../../components/Avatar';
@@ -23,7 +24,12 @@ const Feed = () => {
     <div className="feed-page">
       <header className="feed-header">
         <h1 className="feed-title">Home</h1>
-        {user && <Avatar src={user.avatar} alt={user.username} className="user-avatar" />}
+        <div className="feed-header-actions">
+          <Link to="/create" className="create-post-button">
+            <Plus size={24} />
+          </Link>
+          {user && <Avatar src={user.avatar} alt={user.username} className="user-avatar" />}
+        </div>
       </header>
 
       <div className="feed-content">

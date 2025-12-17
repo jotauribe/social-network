@@ -26,4 +26,18 @@ export const postService = {
     }
     return response.json();
   },
+
+  createPost: async (post: Omit<Post, 'id' | 'createdAt' | 'comments'>): Promise<Post> => {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(post),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to create post');
+    }
+    return response.json();
+  },
 };

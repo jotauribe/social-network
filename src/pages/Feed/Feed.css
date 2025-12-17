@@ -24,6 +24,26 @@
   color: var(--secondary-text);
 }
 
+.feed-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.create-post-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f1419;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.create-post-button:hover {
+  background-color: #eff3f4;
+}
+
 .user-avatar {
   width: 32px;
   height: 32px;
