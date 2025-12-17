@@ -1,11 +1,13 @@
 import './SetupProfile.css';
 
+import { clsx } from 'clsx';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { Button } from '../components/Button';
-import { Card } from '../components/Card';
-import { Input } from '../components/Input';
+import { Avatar } from '../../components/Avatar';
+import { Button } from '../../components/Button';
+import { Card } from '../../components/Card';
+import { Input } from '../../components/Input';
 
 const AVATARS = [
   'https://api.dicebear.com/9.x/notionists/svg?seed=Felix',
@@ -17,6 +19,11 @@ const AVATARS = [
   'https://api.dicebear.com/9.x/notionists/svg?seed=Oliver',
   'https://api.dicebear.com/9.x/notionists/svg?seed=Sasha',
 ];
+
+const getAvatarName = (url: string) => {
+  const seed = new URL(url).searchParams.get('seed');
+  return seed || 'Avatar';
+};
 
 const SetupProfile = () => {
   const [username, setUsername] = useState('');
@@ -35,18 +42,28 @@ const SetupProfile = () => {
       <Card title="Welcome!" subtitle="Choose your avatar and set a username.">
         <form onSubmit={handleSubmit} className="profile-form">
           <div className="avatar-section">
-            <label className="avatar-label">Choose an Avatar</label>
-            <div className="avatar-grid">
-              {AVATARS.map((avatar) => (
-                <button
-                  key={avatar}
-                  type="button"
-                  onClick={() => setSelectedAvatar(avatar)}
-                  className={`avatar-button ${selectedAvatar === avatar ? 'selected' : ''}`}
-                >
-                  <img src={avatar} alt="Avatar option" />
-                </button>
-              ))}
+            <label className="avatar-label" id="avatar-label">
+              Choose an Avatar
+            </label>
+            <div className="avatar-grid" role="radiogroup" aria-labelledby="avatar-label">
+              {AVATARS.map((avatar) => {
+                const name = getAvatarName(avatar);
+                const isSelected = selectedAvatar === avatar;
+
+                return (
+                  <button
+                    key={avatar}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    aria-label={`Select ${name}`}
+                    onClick={() => setSelectedAvatar(avatar)}
+                    className={clsx('avatar-option', { selected: isSelected })}
+                  >
+                    <Avatar src={avatar} alt="" />
+                  </button>
+                );
+              })}
             </div>
           </div>
 

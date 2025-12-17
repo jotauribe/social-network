@@ -1,17 +1,15 @@
 import './Button.css';
 
-import React from 'react';
+import { clsx } from 'clsx';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger';
+  className?: string;
 }
 
-export const Button = ({ children, variant = 'primary', className, ...props }: ButtonProps) => {
-  // Simple class merging
-  const combinedClassName = `button ${variant} ${className || ''}`.trim();
-
+export const Button = ({ children, className, variant = 'primary', ...props }: ButtonProps) => {
   return (
-    <button className={combinedClassName} {...props}>
+    <button className={clsx('button', variant, className)} {...props}>
       {children}
     </button>
   );

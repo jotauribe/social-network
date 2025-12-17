@@ -1,17 +1,18 @@
 import './Card.css';
 
+import { clsx } from 'clsx';
 import type { ReactNode } from 'react';
 
 interface CardProps {
-  children: ReactNode;
-  className?: string;
   title?: string;
   subtitle?: string;
+  children: ReactNode;
+  className?: string;
 }
 
-export const Card = ({ children, className, title, subtitle }: CardProps) => {
+export const Card = ({ title, subtitle, children, className }: CardProps) => {
   return (
-    <div className={`card ${className || ''}`.trim()}>
+    <div className={clsx('card', className)}>
       {title && <h1 className="card-title">{title}</h1>}
       {subtitle && <p className="card-subtitle">{subtitle}</p>}
       {children}

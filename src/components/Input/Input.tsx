@@ -1,20 +1,20 @@
 import './Input.css';
 
+import { clsx } from 'clsx';
 import type { InputHTMLAttributes } from 'react';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label: string;
+  containerClassName?: string;
 }
 
-export const Input = ({ label, id, ...props }: InputProps) => {
+export const Input = ({ label, id, className, containerClassName, ...props }: InputProps) => {
   return (
-    <div className="input-container">
-      {label && (
-        <label htmlFor={id} className="input-label">
-          {label}
-        </label>
-      )}
-      <input id={id} className="input-field" {...props} />
+    <div className={clsx('input-container', containerClassName)}>
+      <label htmlFor={id} className="input-label">
+        {label}
+      </label>
+      <input id={id} className={clsx('input-field', className)} {...props} />
     </div>
   );
 };
