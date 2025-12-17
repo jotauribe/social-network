@@ -1,12 +1,14 @@
 import './Feed.css';
 
+import { Link } from 'react-router';
+
 import { Avatar } from '../../components/Avatar';
 import { Post } from '../../components/Post';
-import { usePostRepository } from '../../hooks/usePostRepository';
+import { usePostListRepository } from '../../hooks/usePostListRepository';
 import { useUserRepository } from '../../hooks/useUserRepository';
 
 const Feed = () => {
-  const { posts = [], isLoading, error } = usePostRepository();
+  const { posts = [], isLoading, error } = usePostListRepository();
   const { user } = useUserRepository();
 
   if (isLoading) {
@@ -26,7 +28,9 @@ const Feed = () => {
 
       <div className="feed-content">
         {posts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Link key={post.id} to={`/post/${post.id}`} className="post-link">
+            <Post post={post} />
+          </Link>
         ))}
       </div>
     </div>

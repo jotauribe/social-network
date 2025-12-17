@@ -2,17 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 
 import { postService } from '../services/post.service';
 
-const POSTS_QUERY_KEY = ['posts'];
-
-export const usePostRepository = () => {
-  const postsQuery = useQuery({
-    queryKey: POSTS_QUERY_KEY,
-    queryFn: postService.getPosts,
+export const usePostRepository = (id: string) => {
+  const postQuery = useQuery({
+    queryKey: ['post', id],
+    queryFn: () => postService.getPostById(id),
+    enabled: !!id,
   });
 
   return {
-    posts: postsQuery.data,
-    isLoading: postsQuery.isLoading,
-    error: postsQuery.error,
+    post: postQuery.data,
+    isLoading: postQuery.isLoading,
+    error: postQuery.error,
   };
 };

@@ -1,19 +1,18 @@
 import './Post.css';
 
-import type { Post as PostType } from '../../services/post.service';
+import { formatDate } from '../../utils/date';
 import { Avatar } from '../Avatar';
 import { Card } from '../Card';
 
 type PostProps = {
-  post: PostType;
-};
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+  post: {
+    avatar: string;
+    content: string;
+    createdAt: string;
+    name: string;
+    title: string;
+    comments?: number;
+  };
 };
 
 export const Post = ({ post }: PostProps) => {

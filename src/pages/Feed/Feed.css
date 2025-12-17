@@ -21,7 +21,7 @@
 .feed-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #0f1419;
+  color: var(--secondary-text);
 }
 
 .user-avatar {
@@ -37,6 +37,10 @@
   margin: 0 auto;
   padding-bottom: 1rem;
   padding-top: 1rem;
+}
+
+.post-link {
+  text-decoration: none;
 }
 
 .loading-container,
