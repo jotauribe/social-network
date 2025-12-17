@@ -8,6 +8,7 @@ import { Avatar } from '../../components/Avatar';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { Input } from '../../components/Input';
+import { useUserRepository } from '../../hooks/useUserRepository';
 
 const AVATARS = [
   'https://api.dicebear.com/9.x/notionists/svg?seed=Felix',
@@ -29,12 +30,18 @@ const SetupProfile = () => {
   const [username, setUsername] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState(AVATARS[0]);
   const navigate = useNavigate();
+  const { updateUser, isLoading } = useUserRepository();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) return;
 
-    navigate('/');
+    try {
+      await updateUser({ username, avatar: selectedAvatar });
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+    }
   };
 
   return (
@@ -59,6 +66,7 @@ const SetupProfile = () => {
                     aria-label={`Select ${name}`}
                     onClick={() => setSelectedAvatar(avatar)}
                     className={clsx('avatar-option', { selected: isSelected })}
+                    disabled={isLoading}
                   >
                     <Avatar src={avatar} alt="" />
                   </button>
@@ -75,10 +83,11 @@ const SetupProfile = () => {
             placeholder="e.g. jdoe123"
             required
             autoComplete="off"
+            disabled={isLoading}
           />
 
-          <Button type="submit" disabled={!username.trim()}>
-            Start Posting
+          <Button type="submit" disabled={isLoading || !username.trim()}>
+            {isLoading ? 'Saving...' : 'Start Posting'}
           </Button>
         </form>
       </Card>
