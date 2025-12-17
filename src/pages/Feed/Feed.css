@@ -1,0 +1,54 @@
+.feed-page {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.feed-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #eee;
+  width: 100%;
+}
+
+.feed-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f1419;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.feed-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+.loading-container,
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.125rem;
+  color: #666;
+}
+
+.error-container {
+  color: #ef4444;
+}

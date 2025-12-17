@@ -3,12 +3,12 @@ import './Card.css';
 import { clsx } from 'clsx';
 import type { ReactNode } from 'react';
 
-interface CardProps {
+type CardProps = {
   title?: string;
   subtitle?: string;
   children: ReactNode;
   className?: string;
-}
+};
 
 export const Card = ({ title, subtitle, children, className }: CardProps) => {
   return (
