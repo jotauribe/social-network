@@ -1,10 +1,11 @@
 import './PostDetails.css';
 
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, MoreHorizontal, Trash2 } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 
 import { Avatar } from '../../components/Avatar';
 import { Card } from '../../components/Card';
+import { Menu, MenuItem } from '../../components/Menu';
 import { Post } from '../../components/Post';
 import { useCommentRepository } from '../../hooks/useCommentRepository';
 import { usePostRepository } from '../../hooks/usePostRepository';
@@ -19,7 +20,19 @@ const PostDetails = () => {
     comments,
     isLoading: isCommentsLoading,
     error: commentsError,
+    deleteComment,
+    isDeletingComment,
   } = useCommentRepository(id!);
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (window.confirm('Are you sure you want to delete this comment?')) {
+      try {
+        await deleteComment({ commentId });
+      } catch (error) {
+        console.error('Failed to delete comment:', error);
+      }
+    }
+  };
 
   if (isPostLoading) {
     return (
@@ -69,6 +82,23 @@ const PostDetails = () => {
                       <span className="comment-author-name">{comment.name}</span>
                       <span className="comment-separator">·</span>
                       <span className="comment-date">{formatDate(comment.createdAt)}</span>
+                      <Menu
+                        className="comment-menu"
+                        trigger={
+                          <button className="post-menu-button" aria-label="Comment options">
+                            <MoreHorizontal size={16} />
+                          </button>
+                        }
+                      >
+                        <MenuItem
+                          onClick={() => handleDeleteComment(comment.id)}
+                          disabled={isDeletingComment}
+                          variant="destructive"
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </MenuItem>
+                      </Menu>
                     </div>
                     <p className="comment-text">{comment.comment}</p>
                   </div>

@@ -19,11 +19,20 @@ export const usePostListRepository = () => {
     },
   });
 
+  const deletePostMutation = useMutation({
+    mutationFn: postService.deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: POSTS_QUERY_KEY });
+    },
+  });
+
   return {
     posts: postsQuery.data,
     isLoading: postsQuery.isLoading,
     error: postsQuery.error,
     createPost: createPostMutation.mutateAsync,
     isCreating: createPostMutation.isPending,
+    deletePost: deletePostMutation.mutateAsync,
+    isDeleting: deletePostMutation.isPending,
   };
 };

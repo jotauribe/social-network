@@ -17,4 +17,13 @@ export const commentService = {
     }
     return response.json();
   },
+
+  deleteComment: async (postId: string, commentId: string): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/${postId}/comments/${commentId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error('Failed to delete comment');
+    }
+  },
 };
